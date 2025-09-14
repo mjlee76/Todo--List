@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { fetchTodos, addTodo, toggleTodo, deleteTodo } from '../api/todo'
+import { useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -82,6 +83,17 @@ export default function TodoPage() {
         return true
     })
 
+    const navigate = useNavigate();
+
+    const doLogout = async () => {
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include', // JSESSIONID 쿠키 포함
+        });
+        navigate('/login', { replace: true });
+    };
+
+
     // ----- 참고 디자인 요소: 커스텀 달력 헤더 -----
     const calRef = useRef(null)
     const [monthLabel, setMonthLabel] = useState('')
@@ -116,7 +128,11 @@ export default function TodoPage() {
                         </div>
                     </div>
                     <form action="/logout" method="post">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/20 transition">
+                        <button
+                            type="button"
+                            onClick={doLogout}
+                            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/20 transition"
+                        >
                             <LogOut className="w-5 h-5" />
                             로그아웃
                         </button>

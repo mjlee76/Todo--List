@@ -58,9 +58,9 @@ public class ToDoService {
     }
 
     //할 일 상태 토글
-    public boolean toggleCompleted(String memberId, TodoUpdateDto todoUpdateDto) {
+    public boolean toggleCompleted(String memberId, Long id) {
         // repository에서 토글 실행
-        boolean updated = toDoRepository.toggleCompleted(memberId, todoUpdateDto.getId());
+        boolean updated = toDoRepository.toggleCompleted(memberId, id);
         if(!updated) {
             throw new IllegalStateException("해당 할 일이 존재하지 않거나 접근 권한이 없습니다.");
         }

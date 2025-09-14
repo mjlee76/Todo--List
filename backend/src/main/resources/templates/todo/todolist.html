@@ -1,263 +1,263 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나의 ToDoList</title>
-    <link rel="stylesheet" th:href="@{/css/todolist.css}">
-</head>
-<body>
-<header>
-    <h2>나의 ToDoList</h2>
-    <!-- 로그아웃 버튼 -->
-    <form th:action="@{/logout}" method="post" class="logout-form">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit" class="logout-button">로그아웃</button>
-    </form>
-</header>
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>나의 ToDoList</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/todolist.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<header>-->
+<!--    <h2>나의 ToDoList</h2>-->
+<!--    &lt;!&ndash; 로그아웃 버튼 &ndash;&gt;-->
+<!--    <form th:action="@{/logout}" method="post" class="logout-form">-->
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--        <button type="submit" class="logout-button">로그아웃</button>-->
+<!--    </form>-->
+<!--</header>-->
 
-<div class="container">
-    <!-- 달력 -->
-    <div id="calendar"></div>
+<!--<div class="container">-->
+<!--    &lt;!&ndash; 달력 &ndash;&gt;-->
+<!--    <div id="calendar"></div>-->
 
-    <!-- 오른쪽 할 일 목록 -->
-    <div class="todo-card">
-        <div class="todo-header">
-            <h3>할 일 목록 (<span th:text="${selectedDate}">오늘</span>)</h3>
-            <div class="todo-stats">
-                <div class="stat-item">
-                    <span class="stat-number" id="totalTasks">0</span>
-                    <span class="stat-label">전체</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="completedTasks">0</span>
-                    <span class="stat-label">완료</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" id="remainingTasks">0</span>
-                    <span class="stat-label">남은 일</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="add-task-section">
-            <div class="add-task-form" id="addTaskForm">
-                <form action="/todos" th:action="@{/todos}" method="post" id="todoForm">
-                    <input
-                            type="text"
-                            class="task-input"
-                            id="taskInput"
-                            name="task"
-                            placeholder="새 할 일을 입력하세요..."
-                            required
-                    >
-                    <input type="hidden" name="toDoDate" th:value="${selectedDate}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button type="submit" class="add-button">
-                        추가
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">전체</button>
-            <button class="filter-btn" data-filter="active">진행 중</button>
-            <button class="filter-btn" data-filter="completed">완료</button>
-        </div>
-
-        <div class="todo-list" id="todoList">
-            <div th:if="${#lists.isEmpty(todos)}" class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <p>할 일이 없습니다</p>
-                <p>새로운 할 일을 추가해보세요!</p>
-            </div>
-
-            <div class="todo-item" th:each="t : ${todos}"
-                 th:attr="data-task-id=${t.id}"
-                 th:classappend="${t.completed} ? ' completed' : ''">
-                <div class="todo-checkbox" th:classappend="${t.completed} ? ' checked' : ''" data-action="toggle"></div>
-                <div class="todo-text" th:text="${t.task}">예시 할 일</div>
-                <div class="todo-actions">
-                    <button class="action-btn" data-action="delete" title="삭제">🗑️</button>
-                </div>
-            </div>
-<!--            <div class="todo-item">-->
-<!--                <div class="todo-checkbox" onclick="toggleTask(this)"></div>-->
-<!--                <div class="todo-text">예시 할 일 1</div>-->
-<!--                <div class="todo-actions">-->
-<!--                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>-->
+<!--    &lt;!&ndash; 오른쪽 할 일 목록 &ndash;&gt;-->
+<!--    <div class="todo-card">-->
+<!--        <div class="todo-header">-->
+<!--            <h3>할 일 목록 (<span th:text="${selectedDate}">오늘</span>)</h3>-->
+<!--            <div class="todo-stats">-->
+<!--                <div class="stat-item">-->
+<!--                    <span class="stat-number" id="totalTasks">0</span>-->
+<!--                    <span class="stat-label">전체</span>-->
+<!--                </div>-->
+<!--                <div class="stat-item">-->
+<!--                    <span class="stat-number" id="completedTasks">0</span>-->
+<!--                    <span class="stat-label">완료</span>-->
+<!--                </div>-->
+<!--                <div class="stat-item">-->
+<!--                    <span class="stat-number" id="remainingTasks">0</span>-->
+<!--                    <span class="stat-label">남은 일</span>-->
 <!--                </div>-->
 <!--            </div>-->
-<!--            <div class="todo-item">-->
-<!--                <div class="todo-checkbox" onclick="toggleTask(this)"></div>-->
-<!--                <div class="todo-text">예시 할 일 2</div>-->
+<!--        </div>-->
+
+<!--        <div class="add-task-section">-->
+<!--            <div class="add-task-form" id="addTaskForm">-->
+<!--                <form action="/todos" th:action="@{/todos}" method="post" id="todoForm">-->
+<!--                    <input-->
+<!--                            type="text"-->
+<!--                            class="task-input"-->
+<!--                            id="taskInput"-->
+<!--                            name="task"-->
+<!--                            placeholder="새 할 일을 입력하세요..."-->
+<!--                            required-->
+<!--                    >-->
+<!--                    <input type="hidden" name="toDoDate" th:value="${selectedDate}">-->
+<!--                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--                    <button type="submit" class="add-button">-->
+<!--                        추가-->
+<!--                    </button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="filter-buttons">-->
+<!--            <button class="filter-btn active" data-filter="all">전체</button>-->
+<!--            <button class="filter-btn" data-filter="active">진행 중</button>-->
+<!--            <button class="filter-btn" data-filter="completed">완료</button>-->
+<!--        </div>-->
+
+<!--        <div class="todo-list" id="todoList">-->
+<!--            <div th:if="${#lists.isEmpty(todos)}" class="empty-state">-->
+<!--                <div class="empty-state-icon">📝</div>-->
+<!--                <p>할 일이 없습니다</p>-->
+<!--                <p>새로운 할 일을 추가해보세요!</p>-->
+<!--            </div>-->
+
+<!--            <div class="todo-item" th:each="t : ${todos}"-->
+<!--                 th:attr="data-task-id=${t.id}"-->
+<!--                 th:classappend="${t.completed} ? ' completed' : ''">-->
+<!--                <div class="todo-checkbox" th:classappend="${t.completed} ? ' checked' : ''" data-action="toggle"></div>-->
+<!--                <div class="todo-text" th:text="${t.task}">예시 할 일</div>-->
 <!--                <div class="todo-actions">-->
-<!--                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>-->
+<!--                    <button class="action-btn" data-action="delete" title="삭제">🗑️</button>-->
 <!--                </div>-->
 <!--            </div>-->
-<!--            <div class="todo-item">-->
-<!--                <div class="todo-checkbox" onclick="toggleTask(this)"></div>-->
-<!--                <div class="todo-text">예시 할 일 3</div>-->
-<!--                <div class="todo-actions">-->
-<!--                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>-->
-<!--                </div>-->
-<!--            </div>-->
-        </div>
-    </div>
-</div>
+<!--&lt;!&ndash;            <div class="todo-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-checkbox" onclick="toggleTask(this)"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-text">예시 할 일 1</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-actions">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="todo-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-checkbox" onclick="toggleTask(this)"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-text">예시 할 일 2</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-actions">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="todo-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-checkbox" onclick="toggleTask(this)"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-text">예시 할 일 3</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="todo-actions">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button class="action-btn" onclick="deleteTask(this)" title="삭제">🗑️</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
-<!-- FullCalendar JS -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+<!--&lt;!&ndash; FullCalendar JS &ndash;&gt;-->
+<!--<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>-->
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const todoListEl = document.getElementById('todoList');
-  const taskInput = document.getElementById('taskInput');
-  const addBtn = document.querySelector('.add-button');
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const formEl = document.getElementById('todoForm');
-  if (formEl) {
-    formEl.addEventListener('submit', function() {
-      console.log('[todo] submitting form to /todos');
-    });
-  }
-  let tasks = [];
-  let currentFilter = 'all';
+<!--<script>-->
+<!--document.addEventListener('DOMContentLoaded', function() {-->
+<!--  const todoListEl = document.getElementById('todoList');-->
+<!--  const taskInput = document.getElementById('taskInput');-->
+<!--  const addBtn = document.querySelector('.add-button');-->
+<!--  const filterBtns = document.querySelectorAll('.filter-btn');-->
+<!--  const formEl = document.getElementById('todoForm');-->
+<!--  if (formEl) {-->
+<!--    formEl.addEventListener('submit', function() {-->
+<!--      console.log('[todo] submitting form to /todos');-->
+<!--    });-->
+<!--  }-->
+<!--  let tasks = [];-->
+<!--  let currentFilter = 'all';-->
 
-  // === Bootstrap from server-rendered DOM ===
-  function bootstrapFromDOM() {
-    tasks = [];
-    const items = todoListEl.querySelectorAll('.todo-item');
-    items.forEach((el) => {
-      const idAttr = el.getAttribute('data-task-id');
-      const completed = el.classList.contains('completed');
-      const textEl = el.querySelector('.todo-text');
-      tasks.push({
-        id: idAttr ? parseInt(idAttr, 10) : Date.now(),
-        text: textEl ? textEl.textContent.trim() : '',
-        completed
-      });
-    });
-    updateStats();
-    checkEmptyState();
-  }
+<!--  // === Bootstrap from server-rendered DOM ===-->
+<!--  function bootstrapFromDOM() {-->
+<!--    tasks = [];-->
+<!--    const items = todoListEl.querySelectorAll('.todo-item');-->
+<!--    items.forEach((el) => {-->
+<!--      const idAttr = el.getAttribute('data-task-id');-->
+<!--      const completed = el.classList.contains('completed');-->
+<!--      const textEl = el.querySelector('.todo-text');-->
+<!--      tasks.push({-->
+<!--        id: idAttr ? parseInt(idAttr, 10) : Date.now(),-->
+<!--        text: textEl ? textEl.textContent.trim() : '',-->
+<!--        completed-->
+<!--      });-->
+<!--    });-->
+<!--    updateStats();-->
+<!--    checkEmptyState();-->
+<!--  }-->
 
-  // === Add task to DOM ===
-  function addTaskToDOM(task) {
-    const el = document.createElement('div');
-    el.className = 'todo-item' + (task.completed ? ' completed' : '');
-    el.setAttribute('data-task-id', task.id);
-    el.innerHTML = `
-      <div class="todo-checkbox ${task.completed ? 'checked' : ''}" data-action="toggle"></div>
-      <div class="todo-text"></div>
-      <div class="todo-actions">
-        <button class="action-btn" data-action="delete" title="삭제">🗑️</button>
-      </div>`;
-    el.querySelector('.todo-text').textContent = task.text;
+<!--  // === Add task to DOM ===-->
+<!--  function addTaskToDOM(task) {-->
+<!--    const el = document.createElement('div');-->
+<!--    el.className = 'todo-item' + (task.completed ? ' completed' : '');-->
+<!--    el.setAttribute('data-task-id', task.id);-->
+<!--    el.innerHTML = `-->
+<!--      <div class="todo-checkbox ${task.completed ? 'checked' : ''}" data-action="toggle"></div>-->
+<!--      <div class="todo-text"></div>-->
+<!--      <div class="todo-actions">-->
+<!--        <button class="action-btn" data-action="delete" title="삭제">🗑️</button>-->
+<!--      </div>`;-->
+<!--    el.querySelector('.todo-text').textContent = task.text;-->
 
-    const empty = todoListEl.querySelector('.empty-state');
-    if (empty) empty.remove();
+<!--    const empty = todoListEl.querySelector('.empty-state');-->
+<!--    if (empty) empty.remove();-->
 
-    todoListEl.appendChild(el);
-  }
+<!--    todoListEl.appendChild(el);-->
+<!--  }-->
 
-  // === Stats ===
-  function updateStats() {
-    const total = tasks.length;
-    const completed = tasks.filter(t => t.completed).length;
-    const remaining = total - completed;
-    const totalEl = document.getElementById('totalTasks');
-    const compEl = document.getElementById('completedTasks');
-    const remainEl = document.getElementById('remainingTasks');
-    if (totalEl) totalEl.textContent = total;
-    if (compEl) compEl.textContent = completed;
-    if (remainEl) remainEl.textContent = remaining;
-  }
+<!--  // === Stats ===-->
+<!--  function updateStats() {-->
+<!--    const total = tasks.length;-->
+<!--    const completed = tasks.filter(t => t.completed).length;-->
+<!--    const remaining = total - completed;-->
+<!--    const totalEl = document.getElementById('totalTasks');-->
+<!--    const compEl = document.getElementById('completedTasks');-->
+<!--    const remainEl = document.getElementById('remainingTasks');-->
+<!--    if (totalEl) totalEl.textContent = total;-->
+<!--    if (compEl) compEl.textContent = completed;-->
+<!--    if (remainEl) remainEl.textContent = remaining;-->
+<!--  }-->
 
-  // === Empty state ===
-  function checkEmptyState() {
-    const hasVisible = Array.from(todoListEl.querySelectorAll('.todo-item'))
-      .some(el => el.style.display !== 'none');
-    let empty = todoListEl.querySelector('.empty-state');
-    if (!hasVisible && tasks.length === 0) {
-      if (!empty) {
-        empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.innerHTML = '<div class="empty-state-icon">📝</div><p>할 일이 없습니다</p><p>새로운 할 일을 추가해보세요!</p>';
-        todoListEl.appendChild(empty);
-      }
-    } else if (empty) {
-      empty.remove();
-    }
-  }
+<!--  // === Empty state ===-->
+<!--  function checkEmptyState() {-->
+<!--    const hasVisible = Array.from(todoListEl.querySelectorAll('.todo-item'))-->
+<!--      .some(el => el.style.display !== 'none');-->
+<!--    let empty = todoListEl.querySelector('.empty-state');-->
+<!--    if (!hasVisible && tasks.length === 0) {-->
+<!--      if (!empty) {-->
+<!--        empty = document.createElement('div');-->
+<!--        empty.className = 'empty-state';-->
+<!--        empty.innerHTML = '<div class="empty-state-icon">📝</div><p>할 일이 없습니다</p><p>새로운 할 일을 추가해보세요!</p>';-->
+<!--        todoListEl.appendChild(empty);-->
+<!--      }-->
+<!--    } else if (empty) {-->
+<!--      empty.remove();-->
+<!--    }-->
+<!--  }-->
 
 
-  // === Toggle / Delete (event delegation) ===
-  todoListEl.addEventListener('click', function(e) {
-    const action = e.target.getAttribute('data-action');
-    const itemEl = e.target.closest('.todo-item');
-    if (!itemEl) return;
-    const id = parseInt(itemEl.getAttribute('data-task-id'), 10);
+<!--  // === Toggle / Delete (event delegation) ===-->
+<!--  todoListEl.addEventListener('click', function(e) {-->
+<!--    const action = e.target.getAttribute('data-action');-->
+<!--    const itemEl = e.target.closest('.todo-item');-->
+<!--    if (!itemEl) return;-->
+<!--    const id = parseInt(itemEl.getAttribute('data-task-id'), 10);-->
 
-    if (action === 'toggle') {
-      const t = tasks.find(t => t.id === id);
-      if (!t) return;
-      t.completed = !t.completed;
-      itemEl.classList.toggle('completed');
-      e.target.classList.toggle('checked');
-      updateStats();
-    }
+<!--    if (action === 'toggle') {-->
+<!--      const t = tasks.find(t => t.id === id);-->
+<!--      if (!t) return;-->
+<!--      t.completed = !t.completed;-->
+<!--      itemEl.classList.toggle('completed');-->
+<!--      e.target.classList.toggle('checked');-->
+<!--      updateStats();-->
+<!--    }-->
 
-    if (action === 'delete') {
-      tasks = tasks.filter(t => t.id !== id);
-      itemEl.style.transform = 'translateX(-100%)';
-      itemEl.style.opacity = '0';
-      setTimeout(() => {
-        itemEl.remove();
-        updateStats();
-        checkEmptyState();
-      }, 250);
-    }
-  });
+<!--    if (action === 'delete') {-->
+<!--      tasks = tasks.filter(t => t.id !== id);-->
+<!--      itemEl.style.transform = 'translateX(-100%)';-->
+<!--      itemEl.style.opacity = '0';-->
+<!--      setTimeout(() => {-->
+<!--        itemEl.remove();-->
+<!--        updateStats();-->
+<!--        checkEmptyState();-->
+<!--      }, 250);-->
+<!--    }-->
+<!--  });-->
 
-  // === Filters ===
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      currentFilter = this.dataset.filter;
-      Array.from(todoListEl.querySelectorAll('.todo-item')).forEach(el => {
-        const id = parseInt(el.getAttribute('data-task-id'), 10);
-        const t = tasks.find(x => x.id === id);
-        if (!t) return;
-        let show = true;
-        if (currentFilter === 'active') show = !t.completed;
-        else if (currentFilter === 'completed') show = t.completed;
-        el.style.display = show ? 'flex' : 'none';
-      });
-      checkEmptyState();
-    });
-  });
+<!--  // === Filters ===-->
+<!--  filterBtns.forEach(btn => {-->
+<!--    btn.addEventListener('click', function() {-->
+<!--      filterBtns.forEach(b => b.classList.remove('active'));-->
+<!--      this.classList.add('active');-->
+<!--      currentFilter = this.dataset.filter;-->
+<!--      Array.from(todoListEl.querySelectorAll('.todo-item')).forEach(el => {-->
+<!--        const id = parseInt(el.getAttribute('data-task-id'), 10);-->
+<!--        const t = tasks.find(x => x.id === id);-->
+<!--        if (!t) return;-->
+<!--        let show = true;-->
+<!--        if (currentFilter === 'active') show = !t.completed;-->
+<!--        else if (currentFilter === 'completed') show = t.completed;-->
+<!--        el.style.display = show ? 'flex' : 'none';-->
+<!--      });-->
+<!--      checkEmptyState();-->
+<!--    });-->
+<!--  });-->
 
-  // === FullCalendar ===
-  const calendarEl = document.getElementById('calendar');
-  if (calendarEl && window.FullCalendar) {
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      height: 'auto',
-      locale: 'ko',
-      dateClick: function(info) {
-        // 날짜 클릭 시 해당 날짜로 서버 조회
-        window.location.href = '/todos?date=' + info.dateStr;
-      }
-    });
-    calendar.render();
-  }
+<!--  // === FullCalendar ===-->
+<!--  const calendarEl = document.getElementById('calendar');-->
+<!--  if (calendarEl && window.FullCalendar) {-->
+<!--    const calendar = new FullCalendar.Calendar(calendarEl, {-->
+<!--      initialView: 'dayGridMonth',-->
+<!--      height: 'auto',-->
+<!--      locale: 'ko',-->
+<!--      dateClick: function(info) {-->
+<!--        // 날짜 클릭 시 해당 날짜로 서버 조회-->
+<!--        window.location.href = '/todos?date=' + info.dateStr;-->
+<!--      }-->
+<!--    });-->
+<!--    calendar.render();-->
+<!--  }-->
 
-  // === Bootstrap run ===
-  bootstrapFromDOM();
-});
-</script>
-</body>
-</html>
+<!--  // === Bootstrap run ===-->
+<!--  bootstrapFromDOM();-->
+<!--});-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
