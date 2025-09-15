@@ -36,6 +36,32 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
         return jdbcTemplate.query("SELECT * FROM member", memberRowMapper());
     }
 
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        List<Member> result = jdbcTemplate.query("SELECT * FROM member WHERE email = ?", memberRowMapper(), email);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public boolean existsByEmailExcludingId(String email, String id) {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM member WHERE email = ? AND id <> = ?", Integer.class, email, id);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public int updateName(String id, String name) {
+        return jdbcTemplate.update("UPDATE member SET name = ? WHERE id = ?", name, id);
+    }
+
+    @Override
+    public int updateEmail(String id, String email) {
+        return jdbcTemplate.update("UPDATE member SET email = ? WHERE id = ?", email, id);
+    }
+
+    @Override
+    public int updatePassword(String id, String password) {
+        return jdbcTemplate.update("UPDATE member SET password = ? WHERE id = ?", password, id);
+    }
 
     // RowMapper는 JDBC의 query()메서드가 반환한 ResultSet 한 행(row)을 → 도메인 객체(Member)로 변환하는 역할
     // RowMapper는 인터페이스이고 mapRow 메서드가 정의되어있음

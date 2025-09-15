@@ -22,6 +22,7 @@ public class MemberService {
     //회원가입
     public Member join(MemberDto memberDto) {
         validateDuplicatedId(memberDto.getId());
+        validateDuplicatedEmail(memberDto.getEmail());
 
         //회원 객체 생성
         Member member = new Member();
@@ -40,6 +41,13 @@ public class MemberService {
     public void validateDuplicatedId(String id) {
         if (memberRepository.findById(id).isPresent()) {
             throw new IllegalStateException("이미 존재하는 ID입니다.");
+        }
+    }
+
+    //Email 중복 검사
+    public void validateDuplicatedEmail(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
     }
 }

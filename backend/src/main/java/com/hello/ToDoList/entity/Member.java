@@ -6,15 +6,16 @@ import jakarta.persistence.*;
 public class Member {
 
     @Id
+    @Column(nullable = false, unique = true)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     //private LocalDateTime createdAt;
