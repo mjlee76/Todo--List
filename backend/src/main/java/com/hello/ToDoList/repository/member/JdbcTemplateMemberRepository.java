@@ -44,7 +44,7 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 
     @Override
     public boolean existsByEmailExcludingId(String email, String id) {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM member WHERE email = ? AND id <> = ?", Integer.class, email, id);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM member WHERE email = ? AND id <> ?", Integer.class, email, id);
         return count != null && count > 0;
     }
 

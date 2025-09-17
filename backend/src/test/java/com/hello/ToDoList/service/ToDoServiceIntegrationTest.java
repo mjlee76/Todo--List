@@ -83,9 +83,7 @@ public class ToDoServiceIntegrationTest {
         ToDoResponseDto saved = todoService.addTodo("testUser", dto);
 
         //when
-        TodoUpdateDto updateDto = new TodoUpdateDto();
-        updateDto.setId(saved.getId());
-        boolean res = todoService.toggleCompleted("testUser", updateDto);
+        boolean res = todoService.toggleCompleted("testUser", saved.getId());
 
         //then
         assertEquals(true, res);

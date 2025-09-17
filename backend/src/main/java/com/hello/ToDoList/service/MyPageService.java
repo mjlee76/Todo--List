@@ -6,6 +6,8 @@ import com.hello.ToDoList.repository.member.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.hello.ToDoList.dto.ProfilePatchRequest;
+import com.hello.ToDoList.dto.PasswordChangeRequest;
 
 import java.util.regex.Pattern;
 
@@ -95,9 +97,4 @@ public class MyPageService {
         if (updated != 1) throw new IllegalStateException("비밀번호 변경에 실패했습니다.");
     }
 
-    // 이름/이메일 부분 수정 DTO (null 이면 변경 안 함)
-    public static record ProfilePatchRequest(String name, String email) {}
-
-    // 비밀번호 수정 DTO
-    public static record PasswordChangeRequest(String currentPassword, String newPassword, String repeatPassword) {}
 }
