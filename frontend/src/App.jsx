@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import TodoPage from './page/TodoPage';
 import LoginPage from './page/LoginPage';
 import SignupPage from './page/SignupPage';
+import MyPage from './page/MyPage';
 
 export default function App() {
     return (
@@ -11,6 +12,7 @@ export default function App() {
             <Routes>
                 <Route path="/login" element={<LoginPage/>} />
                 <Route path="/signup" element={<SignupPage/>} />
+                <Route path="/mypage" element={<MyPage/>} />
                 <Route path="/" element={<Protected><TodoPage/></Protected>} />
                 <Route path="*" element={<Navigate to="/" replace/>} />
             </Routes>

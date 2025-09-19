@@ -16,7 +16,8 @@ import {
     ListTodo,
     Clock,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    User
 } from 'lucide-react'
 
 function todayLocal() {
@@ -93,6 +94,9 @@ export default function TodoPage() {
         navigate('/login', { replace: true });
     };
 
+    const goToMyPage = () => {
+        navigate('/mypage');
+    };
 
     // ----- 참고 디자인 요소: 커스텀 달력 헤더 -----
     const calRef = useRef(null)
@@ -127,7 +131,15 @@ export default function TodoPage() {
                             <p className="text-white/70 text-sm">오늘도 화이팅! 💪</p>
                         </div>
                     </div>
-                    <form action="/logout" method="post">
+                    <div className="flex items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={goToMyPage}
+                            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/20 transition"
+                        >
+                            <User className="w-5 h-5" />
+                            마이페이지
+                        </button>
                         <button
                             type="button"
                             onClick={doLogout}
@@ -136,10 +148,11 @@ export default function TodoPage() {
                             <LogOut className="w-5 h-5" />
                             로그아웃
                         </button>
-                    </form>
+                    </div>
                 </div>
             </header>
 
+            {/* 나머지 코드는 동일... */}
             {/* 메인 */}
             <main className="relative z-10 max-w-6xl mx-auto px-6 py-8 text-white">
                 <div className="flex gap-8 items-start">

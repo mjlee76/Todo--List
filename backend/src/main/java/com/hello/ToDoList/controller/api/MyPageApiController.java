@@ -40,7 +40,7 @@ public class MyPageApiController {
         // 캐시 무효화/ETag 등 헤더 제어
         // 프로필/비밀번호 등 개인정보 보안상 캐시 무효와는 기본 설정
         return ResponseEntity
-                .ok().header("Cashe-Control", "no-store") //캐시하지말고 매번 서버에서 가져오기
+                .ok().header("Cache-Control", "no-store") // 캐시하지 말고 매번 서버에서 가져오기
                 .body(me);
     }
 

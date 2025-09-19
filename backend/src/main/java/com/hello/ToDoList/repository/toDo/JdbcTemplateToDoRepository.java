@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcTemplateToDoRepository implements ToDoRepository {
@@ -22,8 +24,8 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
     @Override
     public ToDo save(ToDo todo) {
         String sql = """
-                    INSERT INTO todo (member_id, task, completed, to_do_date, created_at, updated_at) 
-                    VALUES (?, ?, ?, ?, now(), now()) 
+                    INSERT INTO to_do (member_id, task, completed, to_do_date, created_at)
+                    VALUES (?, ?, ?, ?, now())
                     RETURNING id
                     """;
         Long id = jdbcTemplate.queryForObject(sql, Long.class,
@@ -39,7 +41,7 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
     public List<ToDo> findByMemberAndDate(String memberId, LocalDate date) {
         String sql = """
                 SELECT id, member_id, task, completed, to_do_date, created_at, updated_at
-                FROM todo
+                FROM to_do
                 WHERE member_id = ? AND DATE(to_do_date) = ?
                 ORDER BY created_at DESC
                 """;
@@ -50,7 +52,7 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
     public int countByMemberAndDate(String memberId, LocalDate date) {
         String sql = """
                 SELECT COUNT(*)
-                FROM todo
+                FROM to_do
                 WHERE member_id = ? AND DATE(to_do_date) = ?
                 """;
         return jdbcTemplate.queryForObject(sql, Integer.class, memberId, date); //Integer.class: 결과값을 Int 타입으로 매핑
@@ -59,7 +61,7 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
     @Override
     public boolean toggleCompleted(String memberId, Long todoId) {
         String sql = """
-                UPDATE todo 
+                UPDATE to_do 
                 SET completed = NOT completed
                 WHERE member_id = ? AND id = ?
                 """;
@@ -70,11 +72,32 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
     @Override
     public int delete(String memberId, Long todoId) {
         String sql = """
-                DELETE FROM todo
+                DELETE FROM to_do
                 WHERE member_id = ? AND id = ?
                 """;
         int result = jdbcTemplate.update(sql, memberId, todoId);
         return result;
+    }
+
+    @Override
+    public Map<String, Integer> getStatistics(String memberId) {
+        String sql = """
+                SELECT COUNT(*) AS total_todos,
+                COUNT(*) FILTER (WHERE completed = true) AS completed_todos,
+                COUNT(*) FILTER (WHERE to_do_date = CURRENT_DATE) AS today_todos,
+                COUNT(*) FILTER (WHERE to_do_date = CURRENT_DATE AND completed = true) AS completed_today
+                FROM to_do
+                WHERE member_id = ?
+                """;
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            Map<String, Integer> stats = new HashMap<>();
+            stats.put("totalTodos", rs.getInt("total_todos"));
+            stats.put("completedTodos", rs.getInt("completed_todos"));
+            stats.put("todayTodos", rs.getInt("today_todos"));
+            stats.put("completedToday", rs.getInt("completed_today"));
+            return stats;
+        }, memberId);
     }
 
     // 'DB 결과 한 줄' → 'ToDo 객체 하나'로 변환해주는 매퍼 함수

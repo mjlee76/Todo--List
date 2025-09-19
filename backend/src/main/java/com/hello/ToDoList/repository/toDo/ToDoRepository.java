@@ -4,6 +4,7 @@ import com.hello.ToDoList.entity.ToDo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface ToDoRepository {
 
@@ -21,4 +22,7 @@ public interface ToDoRepository {
 
     //할 일 삭제
     int delete(String memberId, Long todoId);
+
+    //통계 조회
+    Map<String, Integer> getStatistics(String memberId);
 }

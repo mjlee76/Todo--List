@@ -3,12 +3,14 @@ package com.hello.ToDoList.service;
 import com.hello.ToDoList.dto.MeResponseDto;
 import com.hello.ToDoList.entity.Member;
 import com.hello.ToDoList.repository.member.MemberRepository;
+import com.hello.ToDoList.repository.toDo.ToDoRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.hello.ToDoList.dto.ProfilePatchRequest;
 import com.hello.ToDoList.dto.PasswordChangeRequest;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Service
@@ -17,9 +19,11 @@ public class MyPageService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ToDoRepository todoRepository;
 
-    public MyPageService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MyPageService(MemberRepository memberRepository, ToDoRepository todoRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.todoRepository = todoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -32,10 +36,13 @@ public class MyPageService {
     public MeResponseDto getMe(String id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
-        return new MeResponseDto(
+        Map<String, Integer> stats = todoRepository.getStatistics(id);
+        return MeResponseDto.of(
                 member.getId(),
                 member.getName(),
-                member.getEmail()
+                member.getEmail(),
+                member.getCreatedAt(),
+                stats
         );
     }
 
