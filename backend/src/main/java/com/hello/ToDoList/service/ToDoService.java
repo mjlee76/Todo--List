@@ -2,8 +2,6 @@ package com.hello.ToDoList.service;
 
 import com.hello.ToDoList.dto.ToDoCreateDto;
 import com.hello.ToDoList.dto.ToDoResponseDto;
-import com.hello.ToDoList.dto.ToDoResponseDto;
-import com.hello.ToDoList.dto.TodoUpdateDto;
 import com.hello.ToDoList.entity.ToDo;
 import com.hello.ToDoList.repository.toDo.ToDoRepository;
 import org.springframework.stereotype.Service;
@@ -36,24 +34,24 @@ public class ToDoService {
         //저장
         ToDo saved = toDoRepository.save(todo);
         //응답 DTO로 반환
-        return new ToDoResponseDto(
-                saved.getId(),
-                saved.getTask(),
-                saved.isCompleted(),
-                saved.getToDoDate()
-        );
+        return ToDoResponseDto.builder()
+                .id(saved.getId())
+                .task(saved.getTask())
+                .completed(saved.isCompleted())
+                .toDoDate(saved.getToDoDate())
+                .build();
     }
 
     //할 일 조회
     public List<ToDoResponseDto> getTodosByDate(String memberId, LocalDate date) {
         //조회한 내용 DTO로 변환
         return toDoRepository.findByMemberAndDate(memberId, date).stream()
-                .map(todo -> new ToDoResponseDto(
-                        todo.getId(),
-                        todo.getTask(),
-                        todo.isCompleted(),
-                        todo.getToDoDate()
-                ))
+                .map(todo -> ToDoResponseDto.builder()
+                        .id(todo.getId())
+                        .task(todo.getTask())
+                        .completed(todo.isCompleted())
+                        .toDoDate(todo.getToDoDate())
+                        .build())
                 .toList();
     }
 

@@ -37,13 +37,16 @@ public class MyPageService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
         Map<String, Integer> stats = todoRepository.getStatistics(id);
-        return MeResponseDto.of(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.getCreatedAt(),
-                stats
-        );
+        return MeResponseDto.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .email(member.getEmail())
+                .createdAt(member.getCreatedAt())
+                .totalTodos(stats != null ? stats.getOrDefault("totalTodos", 0) : 0)
+                .completedTodos(stats != null ? stats.getOrDefault("completedTodos", 0) : 0)
+                .todayTodos(stats != null ? stats.getOrDefault("todayTodos", 0) : 0)
+                .completedToday(stats != null ? stats.getOrDefault("completedToday", 0) : 0)
+                .build();
     }
 
     // ====== 이름/이메일 변경 ======

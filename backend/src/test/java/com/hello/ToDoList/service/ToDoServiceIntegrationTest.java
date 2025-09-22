@@ -2,7 +2,6 @@ package com.hello.ToDoList.service;
 
 import com.hello.ToDoList.dto.ToDoCreateDto;
 import com.hello.ToDoList.dto.ToDoResponseDto;
-import com.hello.ToDoList.dto.TodoUpdateDto;
 import com.hello.ToDoList.entity.ToDo;
 import com.hello.ToDoList.repository.toDo.ToDoRepository;
 import org.junit.jupiter.api.Assertions.*;
