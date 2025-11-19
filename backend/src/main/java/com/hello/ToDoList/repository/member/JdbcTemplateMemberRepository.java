@@ -3,6 +3,7 @@ package com.hello.ToDoList.repository.member;
 import com.hello.ToDoList.entity.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JdbcTemplateMemberRepository implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;

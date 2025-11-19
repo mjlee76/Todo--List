@@ -22,7 +22,7 @@ public class SpringConfig {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
+    /*@Bean
     public MemberService memberService() {
         return new MemberService(memberRepository(), passwordEncoder);
     }
@@ -30,5 +30,5 @@ public class SpringConfig {
     @Bean
     public MemberRepository memberRepository() {
         return new JdbcTemplateMemberRepository(dataSource);
-    }
+    }*/
 }
