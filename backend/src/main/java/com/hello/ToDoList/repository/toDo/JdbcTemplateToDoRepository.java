@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository
 public class JdbcTemplateToDoRepository implements ToDoRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JdbcTemplateToDoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -37,7 +37,7 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
         return todo;
     }
 
-    @Override
+    /*@Override
     public List<ToDo> findByMemberAndDate(String memberId, LocalDate date) {
         String sql = """
                 SELECT id, member_id, task, completed, to_do_date, created_at, updated_at
@@ -46,9 +46,23 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
                 ORDER BY created_at DESC
                 """;
         return jdbcTemplate.query(sql, toDoRowMapper(), memberId, date);
+    }*/
+    //DATE()함수 제거 -> 인덱스 타도록 Range Query 적용
+    @Override
+    public List<ToDo> findByMemberAndDate(String memberId, LocalDate date) {
+        LocalDate nextDate = date.plusDays(1);
+        String sql = """
+                SELECT id, member_id, task, completed, to_do_date, created_at, updated_at
+                FROM to_do
+                WHERE member_id = ? 
+                    AND to_do_date >= ?
+                    AND to_do_date < ?
+                ORDER BY created_at DESC
+                """;
+        return jdbcTemplate.query(sql, toDoRowMapper(), memberId, date, nextDate);
     }
 
-    @Override
+    /*@Override
     public int countByMemberAndDate(String memberId, LocalDate date) {
         String sql = """
                 SELECT COUNT(*)
@@ -56,6 +70,19 @@ public class JdbcTemplateToDoRepository implements ToDoRepository {
                 WHERE member_id = ? AND DATE(to_do_date) = ?
                 """;
         return jdbcTemplate.queryForObject(sql, Integer.class, memberId, date); //Integer.class: 결과값을 Int 타입으로 매핑
+    }*/
+    //DATE()함수 제거 -> 인덱스 타도록 Range Query 적용
+    @Override
+    public int countByMemberAndDate(String memberId, LocalDate date) {
+        LocalDate nextDate = date.plusDays(1);
+        String sql = """
+                SELECT COUNT(*)
+                FROM to_do
+                WHERE member_id = ? 
+                    AND to_do_date = ?
+                    AND to_do_date < ?
+                """;
+        return jdbcTemplate.queryForObject(sql, Integer.class, memberId, date, nextDate); //Integer.class: 결과값을 Int 타입으로 매핑
     }
 
     @Override
